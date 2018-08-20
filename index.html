@@ -137,7 +137,7 @@
 
   <script src="https://unpkg.com/vue/dist/vue.js"></script>
   <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
-  <script src="https://unpkg.com/hamoni-sync@0.4.0/hamoni.dev.js"></script>
+  <script src="https://unpkg.com/hamoni-sync@0.6.2/hamoni.dev.js"></script>
   <script>
     Vue.component('page', {
       template: '#page'
@@ -255,7 +255,7 @@
             this.desserts.splice(item.index, 1, item.value);
           })
 
-          this.listPrimitive.onItemDeleted(item => {
+          this.listPrimitive.onItemRemoved(item => {
             //remove the item at item.index
             this.desserts.splice(item.index, 1);
           })
@@ -269,7 +269,7 @@
 
         deleteItem(item) {
           const index = this.desserts.indexOf(item)
-          confirm('Are you sure you want to delete this item?') && this.listPrimitive.delete(index)
+          confirm('Are you sure you want to delete this item?') && this.listPrimitive.remove(index)
         },
 
         close() {
@@ -284,7 +284,7 @@
           if (this.editedIndex > -1) {
             this.listPrimitive.update(this.editedIndex, this.editedItem)
           } else {
-            this.listPrimitive.push(this.editedItem)
+            this.listPrimitive.add(this.editedItem)
           }
 
           this.close()
