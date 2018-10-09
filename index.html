@@ -7,7 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Welcome to Vuetify</title>
   <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
-  <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet" type="text/css"></link>
+  <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet" type="text/css">
+  </link>
   <link href="styles.css" rel="stylesheet" type="text/css">
   <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
 </head>
@@ -137,7 +138,7 @@
 
   <script src="https://unpkg.com/vue/dist/vue.js"></script>
   <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
-  <script src="https://unpkg.com/hamoni-sync@0.4.0/hamoni.dev.js"></script>
+  <script src="https://unpkg.com/hamoni-sync@1.1.1/hamoni.dev.js"></script>
   <script>
     Vue.component('page', {
       template: '#page'
@@ -199,19 +200,32 @@
         }
       },
       mounted: function () {
-        let hamoni = new Hamoni("ACCOUNT_ID", "APP_ID");
-        hamoni.connect().then(() => {
-          hamoni.get("vue-table").then(primitive => {
-            this.listPrimitive = primitive
-            this.desserts = [...primitive.getAll()]
-            this.subscribeToUpdate()
-          }).catch(error => {
-            if (error === "Error getting state from server")
-              this.initialise(hamoni);
-            else
-              alert(error)
-          })
-        }).catch(alert)
+        const accountId = "YOUR_ACCOUNT_ID";
+        const appId = "YOUR_APP_ID";
+        let hamoni;
+
+        fetch("https://api.sync.hamoni.tech/v1/token", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          body: JSON.stringify({ accountId, appId })
+        }).then(token => {
+          hamoni = new Hamoni(token);
+
+          hamoni.connect().then(() => {
+            hamoni.get("vue-table").then(primitive => {
+              this.listPrimitive = primitive
+              this.desserts = [...primitive.getAll()]
+              this.subscribeToUpdate()
+            }).catch(error => {
+              if (error === "Error getting state from server")
+                this.initialise(hamoni);
+              else
+                alert(error)
+            })
+          }).catch(alert)
+        })
       },
 
       methods: {
